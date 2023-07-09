@@ -13,7 +13,7 @@
     {{-- modal add --}}
     <div class="bg-black/30 w-full h-screen hidden justify-center items-center absolute" id="modalAdd">
         <div class="card w-96 bg-base-100 shadow-xl mx-[5%]">
-            <form action="todos/add" method="post">
+            <form action="{{route('add')}}" method="post">
                 @csrf
                 <div class="card-body">
                 <div class="card-actions justify-between">
@@ -22,7 +22,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
                     </button>
                 </div>
-                <input type="text" placeholder="Task" name="name" class="input input-bordered w-full max-w-xs" />
+                <input type="text" placeholder="Task" name="name" class="input input-bordered w-full max-w-xs" required/>
                 <button class="btn btn-success">ADD</button>
                 </div>
             </form>
@@ -30,30 +30,36 @@
     </div>
 
     <div class="flex justify-center items-center w-full h-screen bg-indigo-400">
-        <div class="w-full max-w-[500px] min-h-[500px] mx-[5%] flex flex-col bg-indigo-50 rounded-lg p-5">
-            <div class="flex justify-between items-center mb-[15px]">
-                <p class="text-[24px] text-indigo-600 font-bold">MY TODO LIST</p>
-                <button class="btn btn-success" id="add">Add</button>
-            </div>
+        <div class="w-full max-w-[500px] min-h-[500px] mx-[5%] flex flex-col bg-indigo-50 rounded-lg p-5 justify-between">
             <div class="flex flex-col">
-                @if (count($todos) == 0)
-                    <p class="text-center text-[20px]">No List</p>
-                @else
-                    @foreach ($todos as $todo)
-                        <div class="grid grid-cols-[1fr,auto] items-center hover:bg-indigo-200 p-2 rounded-lg cursor-pointer gap-1">
-                            <p>{{ $todo->name }}</p>
-                            <div class="flex sm:flex-row flex-col sm:gap-2 gap-1">
-                                <button class="btn btn-success sm:btn-md btn-xs">Edit</button>
-                                <form action="todos/delete/{{$todo->id}}" method="post">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-active btn-error sm:btn-md btn-xs">Delete</button>
-                                </form>
+                <div class="flex justify-between items-center mb-[15px]">
+                    <p class="text-[24px] text-indigo-600 font-bold">MY TODO LIST</p>
+                    <button class="btn btn-success" id="add">Add</button>
+                </div>
+                <div class="flex flex-col mb-[20px] h-full">
+                    @if (count($todos) == 0)
+                        <p class="text-center text-[20px]">No List</p>
+                    @else
+                        @foreach ($todos as $todo)
+                            <div class="grid grid-cols-[1fr,auto] items-center hover:bg-indigo-200 p-2  cursor-pointer gap-1 border-b-[1px] border-gray-400">
+                                <p>{{ $todo->name }}</p>
+                                <div class="flex sm:flex-row flex-col sm:gap-2 gap-1">
+                                    <form action="{{route('todos.update', $todo->id)}}" method="post">
+                                        @csrf
+                                        <button type="submit" class="btn btn-active btn-success sm:btn-md btn-xs w-full">Edit</button>
+                                    </form>
+                                    <form action="{{route('todos.delete', $todo->id)}}" method="post">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-active btn-error sm:btn-md btn-xs w-full">Delete</button>
+                                    </form>
+                                </div>
                             </div>
-                        </div>
-                    @endforeach
-                @endif
+                        @endforeach
+                    @endif
+                </div>
             </div>
+            {{ $todos->links() }}
         </div>
     </div>
 

@@ -13,7 +13,8 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::resource('todos', TodoController::class);
-Route::delete('todos/delete/{todo}',[TodoController::class, 'delete']);
-Route::post('todos/add',[TodoController::class, 'add']);
+Route::get('/todos', [TodoController::class, 'index'])->name('todos.index');
+Route::delete('/todos/delete/{todo}',[TodoController::class, 'delete'])->name('todos.delete');
+Route::post('/todos/add',[TodoController::class, 'add'])->name('add');
+Route::post('/todos/update/{todo}',[TodoController::class, 'update'])->name('todos.update');
+Route::put('/todos/save/{todo}', [TodoController::class, 'save'])->name('todos.save');
